@@ -1,0 +1,31 @@
+# Compiler settings - Can change to clang++ if you prefer
+CXX = g++
+CXXFLAGS = -Wall -std=c++11
+
+# Linker flags
+LDFLAGS =
+
+# Add header files here
+HEADERS = Task.h Scheduler.h
+
+# Source files
+SOURCES = main.cpp Task.cpp Scheduler.cpp
+
+# Object files
+OBJECTS = $(SOURCES:.cpp=.o)
+
+# Executable name
+EXEC = scheduler
+
+all: $(EXEC)
+
+$(EXEC): $(OBJECTS)
+	$(CXX) $(LDFLAGS) -o $@ $^
+
+%.o: %.cpp $(HEADERS)
+	$(CXX) $(CXXFLAGS) -c $<
+
+clean:
+	rm -f $(OBJECTS) $(EXEC)
+
+.PHONY: all clean
