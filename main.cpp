@@ -2,9 +2,10 @@
 #include <iostream>
 #include <map>
 
+
 int main() {
     std::vector<Task> tasks = {
-  Task("Task1", 8, 18, {}), 
+         Task("Task1", 8, 18, {}), 
         Task("Task2", 3, 15, {"Task1"}), 
         Task("Task3", 5, 20, {}), 
         Task("Task4", 4, 16, {"Task2", "Task3"}),
@@ -12,6 +13,7 @@ int main() {
         Task("Task6", 3, 15, {"Task5"}),
         Task("Task7", 6, 22, {}), 
     };
+
 
     Scheduler scheduler(tasks);
 
