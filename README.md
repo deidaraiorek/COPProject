@@ -9,15 +9,10 @@ The Task Scheduler is a C++ application designed to organize and execute tasks b
 ### Prerequisites
 
 - GCC, Clang, or any C++17 compatible compiler
-- GCC, Clang, or any C++17 compatible compiler
 
 ### Compilation
 
 To compile the project, navigate to the project directory in your terminal and run:
-
-```bash
-g++ -Wall -std=c++17 -o main main.cpp Scheduler.cpp Task.cpp
-```
 
 ```bash
 g++ -Wall -std=c++17 -o main main.cpp Scheduler.cpp Task.cpp
