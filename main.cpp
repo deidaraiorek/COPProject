@@ -4,6 +4,7 @@
 #include <iomanip>
 #include <sstream>
 #include <chrono>
+#include <vector>
 
 int main() {
     std::vector<Task> tasks;
@@ -50,26 +51,30 @@ int main() {
         {4, "Dependency"}
     };
 
-    std::cout << "Choose an algorithm:\n";
-    std::cout << "1: EDD (Earliest Due Date) - Schedules tasks based on the earliest deadlines.\n";
-    std::cout << "2: Moore - Minimizes the number of late tasks, removing the task with the longest duration if necessary.\n";
-    std::cout << "3: SPT (Shortest Processing Time) - Schedules tasks in order of shortest to longest duration.\n";
-    std::cout << "4: Dependency - Resolves task dependencies before scheduling.\n";
-
     int choice;
-    std::cin >> choice;
+    do {
+        std::cout << "\nChoose an algorithm (Enter 0 to finish):\n";
+        std::cout << "1: EDD (Earliest Due Date) - Schedules tasks based on the earliest deadlines.\n";
+        std::cout << "2: Moore - Minimizes the number of late tasks, removing the task with the longest duration if necessary.\n";
+        std::cout << "3: SPT (Shortest Processing Time) - Schedules tasks in order of shortest to longest duration.\n";
+        std::cout << "4: Dependency - Resolves task dependencies before scheduling.\n";
+        std::cout << "Enter your choice (1-4, 0 to end): ";
+        std::cin >> choice;
 
-    if (algorithmChoices.find(choice) != algorithmChoices.end()) {
-        std::cout << "Selected: " << algorithmChoices[choice] << std::endl;
-        auto scheduledTasks = scheduler.scheduleTasks(algorithmChoices[choice]);
-        std::cout << "\nScheduled Tasks Order:\n";
-        for (const auto& task : scheduledTasks) {
-            auto deadline_time_t = std::chrono::system_clock::to_time_t(task.getDeadline());
-            std::cout << "Task ID: " << task.getId() << " with deadline " << std::ctime(&deadline_time_t);
+        if (choice != 0) {
+            if (algorithmChoices.find(choice) != algorithmChoices.end()) {
+                std::cout << "Selected: " << algorithmChoices[choice] << std::endl;
+                auto scheduledTasks = scheduler.scheduleTasks(algorithmChoices[choice]);
+                std::cout << "\nScheduled Tasks Order for " << algorithmChoices[choice] << ":\n";
+                for (const auto& task : scheduledTasks) {
+                    auto deadline_time_t = std::chrono::system_clock::to_time_t(task.getDeadline());
+                    std::cout << "Task ID: " << task.getId() << " with deadline " << std::ctime(&deadline_time_t);
+                }
+            } else {
+                std::cout << "Invalid choice. Please try again.\n";
+            }
         }
-    } else {
-        std::cout << "Invalid choice. Exiting program.\n";
-    }
+    } while (choice != 0);
 
     return 0;
 }

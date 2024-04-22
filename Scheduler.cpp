@@ -109,12 +109,12 @@ std::vector<Task> Scheduler::scheduleTasks(const std::string& algorithm) {
         std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
         for (auto& task : tasks) {
             auto deadline_t = std::chrono::system_clock::to_time_t(task.getDeadline());
-            std::cout << "Evaluating Task: " << task.getId() << " with Duration: " << task.getDuration() << " and Deadline: " << std::ctime(&deadline_t) << std::endl;
+            // std::cout << "Evaluating Task: " << task.getId() << " with Duration: " << task.getDuration() << " and Deadline: " << std::ctime(&deadline_t) << std::endl;
             if (currentTime + std::chrono::hours(task.getDuration()) <= task.getDeadline()) {
                 scheduled.push_back(task);
                 currentTime += std::chrono::hours(task.getDuration());
                 auto currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
-                std::cout << "Finish Task: " << task.getId() << " at Current Time: " << std::ctime(&currentTime_t) << std::endl;
+                // std::cout << "Finish Task: " << task.getId() << " at Current Time: " << std::ctime(&currentTime_t) << std::endl;
             } else {
                 auto toRemove = std::max_element(scheduled.begin(), scheduled.end(), compareByDuration);
                 if (toRemove != scheduled.end() && toRemove->getDuration() > task.getDuration()) {
