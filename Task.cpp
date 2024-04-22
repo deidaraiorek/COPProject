@@ -1,7 +1,6 @@
 #include "Task.h"
-#include <algorithm>
 
-Task::Task(std::string id, int duration, int deadline, std::vector<std::string> dependencies)
+Task::Task(std::string id, int duration, std::chrono::system_clock::time_point deadline, std::vector<std::string> dependencies)
     : id(id), duration(duration), deadline(deadline), dependencies(dependencies) {}
 
 std::string Task::getId() const {
@@ -12,7 +11,7 @@ int Task::getDuration() const {
     return duration;
 }
 
-int Task::getDeadline() const {
+std::chrono::system_clock::time_point Task::getDeadline() const {
     return deadline;
 }
 
