@@ -1,7 +1,5 @@
 # Task Scheduler
 
-# Task Scheduler
-
 ## Overview
 
 The Task Scheduler is a C++ application designed to organize and execute tasks based on different scheduling algorithms. It handles complex task dependencies and manages scheduling based on task durations and deadlines, using strategies such as Earliest Due Date (EDD), Shortest Processing Time (SPT), and Moore's algorithm. This application is particularly useful in environments where tasks have specific time constraints and interdependencies.
@@ -35,7 +33,7 @@ To run the program, use the following command:
 
 ```bash
 
-./main
+main.exe
 ```
 
 When executed, the program will prompt you to input the number of tasks, and for each task, you will need to enter details such as the task ID, duration, deadline, and dependencies.
