@@ -1,4 +1,4 @@
-`# Task Scheduler
+# Task Scheduler
 
 ## Overview
 
@@ -14,8 +14,9 @@ The Task Scheduler is a C++ application designed to organize and execute tasks b
 
 To compile the project, navigate to the project directory in your terminal and run:
 
-````bash
-g++ -Wall -std=c++11 -o main main.cpp Scheduler.cpp Task.cpp `
+```bash
+g++ -Wall -std=c++11 -o main main.cpp Scheduler.cpp Task.cpp
+```
 
 This command compiles the source files and generates an executable named `main`.
 
@@ -28,7 +29,8 @@ To run the program, use the following command:
 
 ```bash
 
-./main`
+./main
+```
 
 When executed, the program will prompt you to input the number of tasks, and for each task, you will need to enter details such as the task ID, duration, deadline, and dependencies.
 
@@ -48,4 +50,4 @@ When executed, the program will prompt you to input the number of tasks, and for
     -   SPT: Orders tasks from the shortest to the longest duration.
     -   Moore: Aims to minimize the number of late tasks by potentially removing the longest pending tasks to accommodate more urgent ones.
 -   Real-Time Scheduling: Uses actual date and time data for realistic scheduling scenarios.
-````
+
