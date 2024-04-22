@@ -1,19 +1,45 @@
 #include "Scheduler.h"
 #include <iostream>
 #include <map>
-
+#include <iomanip>
+#include <sstream>
+#include <chrono>
 
 int main() {
-    std::vector<Task> tasks = {
-         Task("Task1", 8, 18, {}), 
-        Task("Task2", 3, 15, {"Task1"}), 
-        Task("Task3", 5, 20, {}), 
-        Task("Task4", 4, 16, {"Task2", "Task3"}),
-        Task("Task5", 1, 12, {}), 
-        Task("Task6", 3, 15, {"Task5"}),
-        Task("Task7", 6, 22, {}), 
-    };
+    std::vector<Task> tasks;
+    int numTasks;
+    std::cout << "Enter the number of tasks: ";
+    std::cin >> numTasks;
+    std::cin.ignore(); // Flush the newline character out of the buffer
 
+    for (int i = 0; i < numTasks; ++i) {
+        std::string id;
+        int duration;
+        std::string deadlineStr;
+        std::vector<std::string> dependencies;
+        std::cout << "Enter Task ID: ";
+        std::getline(std::cin, id);
+        std::cout << "Enter Duration (hours): ";
+        std::cin >> duration;
+        std::cin.ignore();
+        std::cout << "Enter Deadline (YYYY-MM-DD HH:MM): ";
+        std::getline(std::cin, deadlineStr);
+        std::tm tm = {};
+        std::istringstream ss(deadlineStr);
+        ss >> std::get_time(&tm, "%Y-%m-%d %H:%M");
+        auto deadline = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+
+        std::string dep;
+        std::cout << "Enter Dependencies (comma separated, no spaces, hit enter if none): ";
+        std::getline(std::cin, dep);
+        std::istringstream depstream(dep);
+        std::string token;
+        while (getline(depstream, token, ',')) {
+            dependencies.push_back(token);
+        }
+
+        tasks.emplace_back(id, duration, deadline, dependencies);
+    }
 
     Scheduler scheduler(tasks);
 
@@ -38,7 +64,8 @@ int main() {
         auto scheduledTasks = scheduler.scheduleTasks(algorithmChoices[choice]);
         std::cout << "\nScheduled Tasks Order:\n";
         for (const auto& task : scheduledTasks) {
-            std::cout << "Task ID: " << task.getId() << " with deadline " << task.getDeadline() << "\n";
+            auto deadline_time_t = std::chrono::system_clock::to_time_t(task.getDeadline());
+            std::cout << "Task ID: " << task.getId() << " with deadline " << std::ctime(&deadline_time_t);
         }
     } else {
         std::cout << "Invalid choice. Exiting program.\n";

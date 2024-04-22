@@ -3,6 +3,7 @@
 #include <iostream>
 #include <queue>
 #include <map>
+#include <chrono>
 
 // Constructor initializing the task list
 Scheduler::Scheduler(const std::vector<Task>& tasks) : tasks(tasks) {}
@@ -55,17 +56,19 @@ void Scheduler::solveDependencies() {
 
     // List to hold sorted tasks
     std::vector<Task> sortedTasks;
-    int currentTime = 0;
+    std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
     while (!pq.empty()) {
         int u = pq.top();
         pq.pop();
         sortedTasks.push_back(tasks[u]);
 
         // Update current time and check for missed deadlines
-        currentTime += tasks[u].getDuration();
+        currentTime += std::chrono::hours(tasks[u].getDuration());
         if (currentTime > tasks[u].getDeadline()) {
-            std::cout << "Missed Deadline: Task " << tasks[u].getId() << " scheduled to finish at " << currentTime 
-                      << ", past its deadline of " << tasks[u].getDeadline() << "." << std::endl;
+            auto currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+            auto deadline_t = std::chrono::system_clock::to_time_t(tasks[u].getDeadline());
+            std::cout << "Missed Deadline: Task " << tasks[u].getId() << " scheduled to finish at " 
+                      << std::ctime(&currentTime_t) << ", past its deadline of " << std::ctime(&deadline_t) << "." << std::endl;
         }
 
         // Process all adjacent tasks
@@ -103,24 +106,27 @@ std::vector<Task> Scheduler::scheduleTasks(const std::string& algorithm) {
     } else if (algorithm == "Moore") {
         std::sort(tasks.begin(), tasks.end(), compareByDeadline);
 
-        int currentTime = 0;
+        std::chrono::system_clock::time_point currentTime = std::chrono::system_clock::now();
         for (auto& task : tasks) {
-            std::cout << "Evaluating Task: " << task.getId() << " with Duration: " << task.getDuration() << " and Deadline: " << task.getDeadline() << std::endl;
-            if (currentTime + task.getDuration() <= task.getDeadline()) {
+            auto deadline_t = std::chrono::system_clock::to_time_t(task.getDeadline());
+            std::cout << "Evaluating Task: " << task.getId() << " with Duration: " << task.getDuration() << " and Deadline: " << std::ctime(&deadline_t) << std::endl;
+            if (currentTime + std::chrono::hours(task.getDuration()) <= task.getDeadline()) {
                 scheduled.push_back(task);
-                currentTime += task.getDuration();
-                std::cout << "Finish Task: " << task.getId() << " at Current Time: " << currentTime << std::endl;
+                currentTime += std::chrono::hours(task.getDuration());
+                auto currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+                std::cout << "Finish Task: " << task.getId() << " at Current Time: " << std::ctime(&currentTime_t) << std::endl;
             } else {
                 auto toRemove = std::max_element(scheduled.begin(), scheduled.end(), compareByDuration);
                 if (toRemove != scheduled.end() && toRemove->getDuration() > task.getDuration()) {
-                    currentTime -= toRemove->getDuration();
+                    currentTime -= std::chrono::hours(toRemove->getDuration());
                     removed.push_back(*toRemove);
                     scheduled.erase(toRemove);
                     std::cout << "Removed Task: " << toRemove->getId() << " to make room." << std::endl;
-                    if (currentTime + task.getDuration() <= task.getDeadline()) {
+                    if (currentTime + std::chrono::hours(task.getDuration()) <= task.getDeadline()) {
                         scheduled.push_back(task);
-                        currentTime += task.getDuration();
-                        std::cout << "Scheduled Task: " << task.getId() << " after removal at Current Time: " << currentTime << std::endl;
+                        currentTime += std::chrono::hours(task.getDuration());
+                        auto currentTime_t = std::chrono::system_clock::to_time_t(currentTime);
+                        std::cout << "Scheduled Task: " << task.getId() << " after removal at Current Time: " << std::ctime(&currentTime_t) << std::endl;
                     } else {
                         removed.push_back(task);
                         std::cout << "Could not schedule Task: " << task.getId() << "; added to late tasks." << std::endl;
@@ -136,7 +142,8 @@ std::vector<Task> Scheduler::scheduleTasks(const std::string& algorithm) {
     if (!removed.empty()) {
         std::cout << "\nLate Tasks:" << std::endl;
         for (const auto& task : removed) {
-            std::cout << "Task ID: " << task.getId() << " - missed the deadline" << std::endl;
+            auto deadline_t = std::chrono::system_clock::to_time_t(task.getDeadline());
+            std::cout << "Task ID: " << task.getId() << " - missed the deadline " << std::ctime(&deadline_t) << std::endl;
         }
     }
 
